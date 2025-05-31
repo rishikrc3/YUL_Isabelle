@@ -13,7 +13,6 @@ definition ydiv   :: "word \<Rightarrow> word \<Rightarrow> word"   where "ydiv 
 definition ymod   :: "word \<Rightarrow> word \<Rightarrow> word"   where "ymod x y \<equiv> (if y = 0 then 0 else x mod y)"
 definition ysmod  :: "int  \<Rightarrow> int  \<Rightarrow> int"    where "ysmod x y \<equiv> (if y = 0 then 0 else x mod y)"
 definition yexp   :: "word \<Rightarrow> word \<Rightarrow> word"   where "yexp x y \<equiv> x ^ y"
-
 definition ylt    :: "word \<Rightarrow> word \<Rightarrow> word"   where "ylt  x y \<equiv> (if x < y then 1 else 0)"
 definition ygt    :: "word \<Rightarrow> word \<Rightarrow> word"   where "ygt  x y \<equiv> (if x > y then 1 else 0)"
 definition yslt   :: "int  \<Rightarrow> int  \<Rightarrow> word"   where "yslt x y \<equiv> (if x < y then 1 else 0)"

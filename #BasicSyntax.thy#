@@ -1,0 +1,19 @@
+theory BasicSyntax
+  imports Main
+begin
+
+(*Variable Declaration*)
+type_synonym word  = nat                   
+type_synonym var   = string                  
+type_synonym state = "var \<Rightarrow> word"           
+
+definition set_var :: "state \<Rightarrow> var \<Rightarrow> word \<Rightarrow> state"
+  where   "set_var \<sigma> x v \<equiv> \<sigma>(x := v)"         
+
+definition \<sigma>0 :: state
+  where "\<sigma>0 \<equiv> (\<lambda>_. 0)"                       
+
+value "set_var \<sigma>0 ''x'' 2 ''x''"             
+value "set_var \<sigma>0 ''x'' 2 ''y''"             
+
+end
