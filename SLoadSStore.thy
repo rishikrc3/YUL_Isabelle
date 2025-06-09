@@ -8,10 +8,10 @@ type_synonym storage = "nat => val option"
 definition empty_storage :: storage where
   "empty_storage _ = None"
 
-definition sstore :: "storage => nat => val => storage" where
+definition sstore :: "storage =>  nat => val => storage" where
   "sstore st slot v = st(slot := Some v)"
 
-definition sload :: "storage \<Rightarrow> nat \<Rightarrow> val option" where
+definition sload :: "storage => nat => val option" where
   "sload st slot = st slot"
 
 (* Checking the default value at slot 5 in an empty storage — should be None *)
