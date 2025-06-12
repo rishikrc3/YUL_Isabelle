@@ -3,18 +3,18 @@ theory MLoadMStore
 begin
 
 type_synonym val    = nat
-type_synonym memory = "nat \<Rightarrow> val option"
+type_synonym memory = "nat => val option"
 
 
 definition empty_memory :: memory where
   "empty_memory _ = None"
 
 
-definition mstore :: "memory \<Rightarrow> nat \<Rightarrow> val \<Rightarrow> memory" where
+definition mstore :: "memory  =>  nat => val => memory" where
   "mstore mem addr v = mem(addr := Some v)"
 
 
-definition mload :: "memory \<Rightarrow> nat \<Rightarrow> val option" where
+definition mload :: "memory => nat => val option" where
   "mload mem addr = mem addr"
 
 
