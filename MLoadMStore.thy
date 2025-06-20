@@ -124,5 +124,15 @@ contract MemoryModel {
     
     function isInitialized(uint256 addr) public view returns (bool) {
         return addr < maxIndex;
+    
+    function mcopy(uint256 t, uint256 f, uint256 s) public {
+        for (uint256 i = 0; i < s; i++) {
+            uint256 v = mload(f + i);
+            // EVM semantics: treat the “none” sentinel as zero
+            if (v == type(uint256).max) {
+                v = 0;
+            }
+            mstore(t + i, v);
+        }
     }
 }*)
