@@ -21,6 +21,14 @@ definition mload :: "memory => nat => val option" where
       then Some (mem ! addr)
       else None)"
 
+fun mcopy :: "nat \<Rightarrow> nat \<Rightarrow> nat \<Rightarrow> memory \<Rightarrow> memory" where
+  "mcopy _ _ 0 mem = mem"
+| "mcopy t f (Suc s) mem =
+     (case mload mem f of
+        None   \<Rightarrow> mcopy (t + 1) (f + 1) s mem
+      | Some v \<Rightarrow> mcopy (t + 1) (f + 1) s (mstore mem t v))"
+
+
 (* Tests *)
 
 value "empty_memory"
@@ -37,6 +45,10 @@ value "mload (mstore empty_memory 4 255) 4"
 (*
   mload XXX ....
 *)
+
+value "mcopy 0 2 2 [10, 20, 30, 40, 50]"
+value "mcopy 5 0 3 [1, 2, 3]"
+value "mcopy 6 0 2 [10, 20]"
 lemma test_mload_empty:
   "mload empty_memory 0 = None"
   by (simp add: mload_def empty_memory_def)
@@ -75,6 +87,15 @@ lemma test_mstore_and_empty_check:
 lemma test_mstore_zero_addr:
   "mload (mstore empty_memory 0 1) 0 = Some 1"
   by (simp add: mload_def mstore_def empty_memory_def)
+
+section \<open>mcopy Test Lemmas\<close>
+
+lemma test_mcopy_empty:
+  "mcopy 0 0 0 empty_memory = empty_memory"
+  "mcopy 5 10 0 [1,2,3] = [1,2,3]"
+  by (simp_all add: empty_memory_def)
+
+
 
 
 end
