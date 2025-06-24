@@ -32,7 +32,7 @@ lemma pmul_zero_left: "pmul 0 x = 0"
 lemma pmul_zero_right: "pmul x 0 = 0"
   unfolding pmul_def by simp
 
-function power :: "word \<Rightarrow> word \<Rightarrow> word" where
+function power :: "word => word => word" where
   "power base n = 
      (if n = 0 then 1
       else if n = 1 then base
