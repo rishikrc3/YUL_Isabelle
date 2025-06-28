@@ -31,7 +31,7 @@ lemma pmul_zero_left: "pmul 0 x = 0"
 
 lemma pmul_zero_right: "pmul x 0 = 0"
   unfolding pmul_def by simp
-
+(* do it using case*)
 function power :: "word => word => word" where
   "power base n = 
      (if n = 0 then 1
@@ -47,6 +47,21 @@ termination
   done
 
 
+(* 
+    function power(base, exponent) -> result
+    {
+        switch exponent
+        case 0 { result := 1 }
+        case 1 { result := base }
+        default
+        {
+            result := power(mul(base, base), div(exponent, 2))
+            switch mod(exponent, 2)
+                case 1 { result := mul(base, result) }
+        }
+    }
+ 
+*)
 
 
 
@@ -77,6 +92,9 @@ lemma power_zero_base: "1 <= n ==> power 0 n = 0"
 lemma power_one_base:   "power 1 n = 1"
   by (induction n rule: nat_less_induct)
      (auto simp: pdiv_def pmod_def pmul_def)
+
+
+
 
 
 end

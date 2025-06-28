@@ -63,4 +63,18 @@ lemma test_sstore_zero_slot:
   "sload (sstore empty_storage 0 7) 0 = Some 7"
   by (simp add: sload_def sstore_def empty_storage_def)
 
+definition run_yul_example :: "val option \<times> val option \<times> val option" where
+  "run_yul_example =
+    (let st1 = sstore empty_storage 1 42;
+         r1 = sload st1 1;
+         st2 = sstore st1 1 99;
+         r2 = sload st2 1;
+         r3 = sload st2 2
+     in (r1, r2, r3))"
+
+lemma test_yul_example_correct:
+  "run_yul_example = (Some 42, Some 99, None)"
+  unfolding run_yul_example_def
+  by (simp add: empty_storage_def sstore_def sload_def)
+
 end
