@@ -21,7 +21,7 @@ definition mload :: "memory => nat => val option" where
       then Some (mem ! addr)
       else None)"
 
-fun mcopy :: "nat => nat => nat => memory \<Rightarrow> memory" where
+fun mcopy :: "nat => nat => nat => memory => memory" where
   "mcopy _ _ 0 mem = mem"
 | "mcopy t f (Suc s) mem =
      (case mload mem f of
