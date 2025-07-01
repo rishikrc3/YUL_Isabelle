@@ -10,6 +10,26 @@ definition pdiv :: "word => word => word" where
 definition pmod :: "word => word => word" where
   "pmod x y = (if y = 0 then 0 else x mod y)"
 
+
+function power :: "word => word => word" where
+  "power base n =
+     (case n of
+        0           => 1
+      | Suc 0       => base
+      | Suc (Suc m) =>
+           (let r = power (pmul base base) (pdiv (Suc (Suc m)) 2)
+            in case pmod (Suc (Suc m)) 2 of
+                   0 => r
+                 | _ => pmul base r))"
+  by pat_completeness auto        
+
+lemma pdiv_less_self: "2 <= n ==> pdiv n 2 < n"
+  unfolding pdiv_def by (simp)
+termination
+  by (relation "measure (%(_,n). n)")
+     (auto simp: pdiv_less_self)
+
+                                  
 value "pmul 3 4"    
 value "pmul 0 5"     
 
@@ -27,24 +47,6 @@ lemma pmul_zero_left: "pmul 0 x = 0"
 
 lemma pmul_zero_right: "pmul x 0 = 0"
   unfolding pmul_def by simp
-
-function power :: "word => word => word" where
-  "power base n =
-     (case n of
-        0           => 1
-      | Suc 0       => base
-      | Suc (Suc m) =>
-           (let r = power (pmul base base) (pdiv (Suc (Suc m)) 2)
-            in case pmod (Suc (Suc m)) 2 of
-                   0 => r
-                 | _ => pmul base r))"
-  by pat_completeness auto        
-
-lemma pdiv_less_self: "2 <= n ==> pdiv n 2 < n"
-  unfolding pdiv_def by (simp add: div_less_dividend)
-termination
-  by (relation "measure (%(_,n). n)")
-     (auto simp: pdiv_less_self)
 
 value "power 2 0"    (* 1    *)
 value "power 2 1"    (* 2    *)
