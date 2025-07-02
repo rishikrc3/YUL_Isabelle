@@ -21,12 +21,6 @@ definition mload :: "memory => nat => val option" where
       then Some (mem ! addr)
       else None)"
 
-fun mcopy :: "nat => nat => nat => memory => memory" where
-  "mcopy _ _ 0 mem = mem"
-| "mcopy t f (Suc s) mem =
-     (case mload mem f of
-        None   \<Rightarrow> mcopy (t + 1) (f + 1) s mem
-      | Some v \<Rightarrow> mcopy (t + 1) (f + 1) s (mstore mem t v))"
 
 
 (* Tests *)
@@ -46,9 +40,6 @@ value "mload (mstore empty_memory 4 255) 4"
   mload XXX ....
 *)
 
-value "mcopy 0 2 2 [10, 20, 30, 40, 50]"
-value "mcopy 5 0 3 [1, 2, 3]"
-value "mcopy 6 0 2 [10, 20]"
 lemma test_mload_empty:
   "mload empty_memory 0 = None"
   by (simp add: mload_def empty_memory_def)
@@ -88,51 +79,9 @@ lemma test_mstore_zero_addr:
   "mload (mstore empty_memory 0 1) 0 = Some 1"
   by (simp add: mload_def mstore_def empty_memory_def)
 
-section \<open>mcopy Test Lemmas\<close>
-
-lemma test_mcopy_empty:
-  "mcopy 0 0 0 empty_memory = empty_memory"
-  "mcopy 5 10 0 [1,2,3] = [1,2,3]"
-  by (simp_all add: empty_memory_def)
+section \<open>mcopy  Lemmas\<close>
 
 
 
 
 end
-(*
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract MemoryModel {
-    mapping(uint256 => uint256) private mem;
-    uint256 private maxIndex = 0;
-
-    function mstore(uint256 addr, uint256 v) public {
-        mem[addr] = v;
-        if (addr >= maxIndex) {
-            maxIndex = addr + 1;
-        }
-    }
-    
-    function mload(uint256 addr) public view returns (uint256) {
-        if (addr >= maxIndex) {
-            return type(uint256).max;
-        }
-        return mem[addr];
-    }
-    
-    
-    function isInitialized(uint256 addr) public view returns (bool) {
-        return addr < maxIndex;
-    
-    function mcopy(uint256 t, uint256 f, uint256 s) public {
-        for (uint256 i = 0; i < s; i++) {
-            uint256 v = mload(f + i);
-            // EVM semantics: treat the “none” sentinel as zero
-            if (v == type(uint256).max) {
-                v = 0;
-            }
-            mstore(t + i, v);
-        }
-    }
-}*)
