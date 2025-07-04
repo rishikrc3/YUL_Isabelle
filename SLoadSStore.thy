@@ -14,13 +14,23 @@ definition sstore :: "storage =>  nat => val => storage" where
 definition sload :: "storage => nat => val option" where
   "sload st slot = st slot"
 
-(* Checking the default value at slot 5 in an empty storage — should be None *)
+
+definition run_yul_example :: "val option \<times> val option \<times> val option" where
+  "run_yul_example =
+    (let st1 = sstore empty_storage 1 42;
+         r1 = sload st1 1;
+         st2 = sstore st1 1 99;
+         r2 = sload st2 1;
+         r3 = sload st2 2
+     in (r1, r2, r3))"
+
+(* None *)
 value "empty_storage 5"
 
-(* Checking the value at slot 3 in empty storage using sload — should also be None *)
+(* None *)
 value "sload empty_storage 3"
 
-(* Storing value 99 at slot 3 — this evaluates to the internal representation: Some 99 at slot 3 *)
+(* Some 99 at slot 3 *)
 value "(sstore empty_storage 3 99) 3"
 
 (* Using sload to check the value at slot 3 after storing 99 — should return Some 99 *)
@@ -62,5 +72,25 @@ lemma test_sstore_and_empty_slot_check:
 lemma test_sstore_zero_slot:
   "sload (sstore empty_storage 0 7) 0 = Some 7"
   by (simp add: sload_def sstore_def empty_storage_def)
+
+
+lemma test_yul_example_correct:
+  "run_yul_example = (Some 42, Some 99, None)"
+  unfolding run_yul_example_def
+  by (simp add: empty_storage_def sstore_def sload_def)
+value "(sstore (sstore empty_storage 7 700) 8 800) 7" 
+value "(sstore (sstore empty_storage 7 700) 8 800) 8" 
+value "sload (sstore (sstore empty_storage 7 700) 8 800) 9" 
+lemma test_store_multiple_and_check:
+  "sload (sstore (sstore empty_storage 7 700) 8 800) 7 = Some 700"
+  by (simp add: sstore_def sload_def empty_storage_def)
+
+lemma test_store_multiple_and_check_2:
+  "sload (sstore (sstore empty_storage 7 700) 8 800) 8 = Some 800"
+  by (simp add: sstore_def sload_def empty_storage_def)
+
+lemma test_unaffected_slot_remains_none:
+  "sload (sstore (sstore empty_storage 7 700) 8 800) 9 = None"
+  by (simp add: sstore_def sload_def empty_storage_def)
 
 end
