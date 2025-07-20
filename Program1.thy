@@ -63,6 +63,33 @@ lemma power_1 [simp]: "power b 1 = b"
   by simp
 lemma power_two: "power b 2 = pmul b b"
   by (simp add: pdiv_def pmod_def pmul_def)
+lemma power_2_3: "power 2 3 = 8"
+  by eval
+
+lemma power_3_3: "power 3 3 = 27"
+  by eval
+
+lemma power_5_0: "power 5 0 = 1"
+  by eval
+
+lemma power_0_0: "power 0 0 = 1"
+  by eval
+
+lemma power_0_1: "power 0 1 = 0"
+  by eval
+
+lemma power_1_5: "power 1 5 = 1"
+  by eval
+
+lemma power_4_2: "power 4 2 = 16"
+  by eval
+
+lemma power_10_3: "power 10 3 = 1000"
+  by eval
+
+lemma power_7_1: "power 7 1 = 7"
+  by eval
+
 
 
 end
